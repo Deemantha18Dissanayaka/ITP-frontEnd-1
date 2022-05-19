@@ -3,13 +3,50 @@ import Header from "../../../components/Header/Header";
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import "react-datepicker/dist/react-datepicker.css";
 import Footer from "../../../components/Footer/Footer";
-
+import axios from axios;
+/*new*/
 function AddHall() {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggle = () => {
         setIsOpen(!isOpen);
     };
+
+    const [hallNumber, setHallNumber] = useState("");
+    const [floorNumber, setFloorNumber] = useState("");
+    const [capacity, setCapacity] = useState("");
+    const [AC, setAC] = useState("");
+    
+    
+    const onSubmit = async (e) =>{
+        e.preventDefault();
+        const data = {
+            hallnumber: hallNumber,
+            floornumber: floorNumber,
+            capacity: capacity,
+            AC: AC,
+
+        };
+
+        try {
+            await axios
+                 .post("/api/hall/add",{
+                     headers: {
+                        authToken: localStorage.getItem("authToken"),
+                     },
+                     data,
+                 })
+                 .then((res) => {
+                     console.log(res);
+                 })
+                 .catch((err) => { 
+                     console.log(err);
+                 });
+
+        }catch (error) {
+            console.log(error);
+        }
+
 
     return (
         <>
@@ -34,6 +71,9 @@ function AddHall() {
                                 id="username"
                                 type="String"
                                 placeholder="Hall Number"
+                                onChange={(e) =>
+                                    setHallNumber(e.target.value)
+                                }
                             />
                         </div>
                        
@@ -48,6 +88,9 @@ function AddHall() {
                                 id="username"
                                 type="Number"
                                 placeholder="Floor Number"
+                                onChange={(e) =>
+                                    setFloorNumber(e.target.value)
+                                }
                             />
                         </div>
                         <div class="mb-6">
@@ -61,6 +104,9 @@ function AddHall() {
                                 id="username"
                                 type="Number"
                                 placeholder="capacity"
+                                onChange={(e) =>
+                                    setCapacity(e.target.value)
+                                }
                             />
                         </div>
                         <div>
@@ -115,6 +161,7 @@ function AddHall() {
             <Footer />
         </>
     );
+}
 }
 
 export default AddHall;
